@@ -4,7 +4,7 @@ test_that("Invalid filter errors out", {
   # open_alex is not a valid filter
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=open_alex%3AA923435168%7CA2208157607"
+    "filter=open_alex%3AA5069892096%7CA5023888391"
   )
 
   expect_error(oa_request(query_url))
@@ -15,7 +15,7 @@ test_that("oa_request returns list", {
 
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=openalex%3AA923435168%7CA2208157607"
+    "filter=openalex%3AA5069892096%7CA5023888391"
   )
 
   expect_type(oa_request(query_url), "list")
@@ -47,12 +47,14 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
+  expect_true("au_affiliation_raw" %in% names(multi_works$author[[1]]))
+
   Sys.sleep(1 / 10)
-  filtered_works <- oa_fetch(
+  expect_warning(filtered_works <- oa_fetch(
     entity = "w",
     publication_date = "2020-08-01",
     cited_by_count = ">1000"
-  )
+  ))
   expect_s3_class(filtered_works, "data.frame")
 
   expect_warning(oa_fetch(doi = "123"))
@@ -122,6 +124,8 @@ test_that("oa_fetch sample works", {
 
 
 test_that("search works with sampling", {
+  skip_on_cran()
+
   w <- oa_fetch("works", search = "open science", options = list(sample = 5))
   expect_equal(nrow(w), 5)
 })
@@ -292,17 +296,19 @@ test_that("oa_fetch other entities works", {
   skip_on_cran()
 
   random_authors <- oa_fetch(entity = "authors", options = list(sample = 20))
-  random_venues <- oa_fetch(entity = "venues", options = list(sample = 20))
+  random_sources <- oa_fetch(entity = "sources", options = list(sample = 20))
   random_concepts <- oa_fetch(entity = "concepts", options = list(sample = 20))
   random_institutions <- oa_fetch(entity = "institutions", options = list(sample = 20))
 
   expect_equal(nrow(random_authors), 20)
-  expect_equal(nrow(random_venues), 20)
+  expect_equal(nrow(random_sources), 20)
   expect_equal(nrow(random_concepts), 20)
   expect_equal(nrow(random_institutions), 20)
 })
 
 test_that("paging works with sample", {
+  skip_on_cran()
+
   w <- oa_fetch(
     "works",
     from_publication_date = Sys.Date() - 2,
@@ -315,6 +321,8 @@ test_that("paging works with sample", {
 })
 
 test_that("oa_fetch works for funders", {
+  skip_on_cran()
+
   s <- oa_fetch("funders", country_code = "ca", cited_by_count = ">100000")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 17)
@@ -322,6 +330,8 @@ test_that("oa_fetch works for funders", {
 })
 
 test_that("oa_fetch works for sources", {
+  skip_on_cran()
+
   s <- oa_fetch(entity = "sources", search = "nature")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 27)
@@ -329,6 +339,8 @@ test_that("oa_fetch works for sources", {
 })
 
 test_that("oa_fetch works for publishers", {
+  skip_on_cran()
+
   s <- oa_fetch(entity = "publishers", country_codes = "ca")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 19)
@@ -336,6 +348,8 @@ test_that("oa_fetch works for publishers", {
 })
 
 test_that("oa_fetch works with 1 identifier", {
+  skip_on_cran()
+
   w <- oa_fetch(identifier = "W3046863325") # Work
   a <- oa_fetch(identifier = "A5023888391") # Author
   i <- oa_fetch(identifier = "I4200000001") # Institution
@@ -352,8 +366,8 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 36))
-  expect_equal(dim(a), c(1, 16))
+  expect_equal(dim(w), c(1, 38))
+  expect_equal(dim(a), c(1, 17))
   expect_equal(dim(i), c(1, 21))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
@@ -363,6 +377,8 @@ test_that("oa_fetch works with 1 identifier", {
 })
 
 test_that("oa_fetch for identifiers works with options", {
+  skip_on_cran()
+
   i <- oa_fetch(
     identifier = "I201448701",
     options = list(select = c("ids", "country_code"))
@@ -378,6 +394,8 @@ test_that("oa_fetch for identifiers works with options", {
 })
 
 test_that("different paging methods yield the same result", {
+  skip_on_cran()
+
   w0 <- oa_fetch(
     entity = "works",
     title.search = c("bibliometric analysis", "science mapping"),
@@ -409,6 +427,8 @@ test_that("different paging methods yield the same result", {
 })
 
 test_that("pages works", {
+  skip_on_cran()
+
   # The last 10 pages when per_page = 20
   # should be the same as the 10 pages when fetching page 2
   w1 <- oa_fetch(

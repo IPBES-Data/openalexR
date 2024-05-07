@@ -96,35 +96,20 @@ formulated through the function \code{oa_query}.
 #   An R-tool for comprehensive science mapping analysis.
 #   Journal of informetrics, 11(4), 959-975.
 
+res <- oa_request(query_url = "https://api.openalex.org/works/W2755950973")
 
-query_work <- oa_query(
-  identifier = "W2755950973",
-  entity = "works",
-  endpoint = "https://api.openalex.org"
-)
-
-res <- oa_request(
-  query_url = query_work,
-  count_only = FALSE,
-  verbose = FALSE
-)
-
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
-
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096.
 
 query_author <- oa_query(
-  identifier = "A923435168",
-  entity = "authors",
-  endpoint = "https://api.openalex.org"
+  identifier = "A5069892096",
+  entity = "authors"
 )
-
+query_author
 res <- oa_request(
   query_url = query_author,
   count_only = FALSE,
   verbose = FALSE
 )
-
-
 
 ### EXAMPLE 2: all works citing a particular work.
 
@@ -141,8 +126,8 @@ res <- oa_request(
 query2 <- oa_query(
   identifier = NULL,
   entity = "works",
-  filter = "cites:W2755950973",
-  from_publication_date = "2021-01-01",
+  cites = "W2755950973",
+  from_publication_date = "2021-12-01",
   to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org"
@@ -163,13 +148,10 @@ res2 <- oa_request(
 
 
 query3 <- oa_query(
-  identifier = NULL,
   entity = "works",
-  filter = 'title.search:"bibliometric analysis"|"science mapping"',
-  from_publication_date = "2020-01-01",
-  to_publication_date = "2021-12-31",
-  search = NULL,
-  endpoint = "https://api.openalex.org"
+  title.search = c("bibliometric analysis", "science mapping"),
+  from_publication_date = "2021-12-01",
+  to_publication_date = "2021-12-31"
 )
 
 res3 <- oa_request(
@@ -185,13 +167,10 @@ res3 <- oa_request(
 # Query only to know how many works could be retrieved (count_only=TRUE)
 
 query4 <- oa_query(
-  identifier = NULL,
   entity = "works",
-  filter = 'title.search:"bibliometric analysis"|"science mapping"',
+  title.search = c("bibliometric analysis", "science mapping"),
   from_publication_date = "2020-01-01",
-  to_publication_date = "2021-12-31",
-  search = NULL,
-  endpoint = "https://api.openalex.org"
+  to_publication_date = "2021-12-31"
 )
 
 res4 <- oa_request(

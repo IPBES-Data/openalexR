@@ -2,8 +2,7 @@
 % Please edit documentation in R/oa_fetch.R
 \name{oa_fetch}
 \alias{oa_fetch}
-\title{A composition function to perform query building, requesting,
-and convert the result to a tibble/data frame.}
+\title{Fetching records}
 \usage{
 oa_fetch(
   entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),
@@ -26,7 +25,8 @@ oa_fetch(
 }
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
-The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
@@ -41,7 +41,7 @@ Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
 
 - `sort` Character. Attribute to sort by.
-For example: "display_name" for venues or "cited_by_count:desc" for works.
+For example: "display_name" for sources or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 
 - `sample` Integer. Number of (random) records to return.
@@ -100,7 +100,9 @@ Gives OpenAlex an email to enter the polite pool.}
 Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
 A data.frame or a list. Result of the query.
@@ -141,7 +143,7 @@ oa_fetch(
 )
 
 oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
+  identifier = c("A5069892096", "A5023888391"),
   verbose = TRUE
 )
 }

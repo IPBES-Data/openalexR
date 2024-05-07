@@ -4,7 +4,11 @@
 \alias{authors2df}
 \title{Convert OpenAlex collection of authors' records from list format to data frame}
 \usage{
-authors2df(data, verbose = TRUE)
+authors2df(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+)
 }
 \arguments{
 \item{data}{List. Output of \code{oa_request}.}
@@ -12,6 +16,9 @@ authors2df(data, verbose = TRUE)
 \item{verbose}{Logical.
 If TRUE, print information about the dataframe conversion process.
 Defaults to TRUE.}
+
+\item{pb}{Progress bar object. If verbose, computed from `oa_progress`.
+NULL otherwise.}
 }
 \value{
 a data.frame.
@@ -34,8 +41,8 @@ The function converts a list of authors' records obtained using \code{oa_request
 query_author <- oa_query(
   identifier = NULL,
   entity = "authors",
-  last_known_institution.id = "I71267560",
-  works_count = ">99"
+  last_known_institutions.id = "I71267560",
+  works_count = ">500"
 )
 
 res <- oa_request(

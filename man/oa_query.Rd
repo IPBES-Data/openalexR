@@ -34,7 +34,8 @@ or `to_publication_date = "2021-12-31"`.}
 See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.}
 
 \item{entity}{Character. Scholarly entity of the search.
-The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{options}{List. Additional parameters to add in the query. For example:
@@ -44,7 +45,7 @@ Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
 
 - `sort` Character. Attribute to sort by.
-For example: "display_name" for venues or "cited_by_count:desc" for works.
+For example: "display_name" for sources or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 
 - `sample` Integer. Number of (random) records to return.
@@ -73,7 +74,9 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{\dots}{Additional filter arguments.}
 }
@@ -89,7 +92,7 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 \dontrun{
 
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 ### EXAMPLE 1: Full record about an entity.
 
@@ -106,11 +109,9 @@ query_work <- oa_query(
   verbose = TRUE
 )
 
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168:
-
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
-
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 ### EXAMPLE 2: all works citing a particular work.
 
