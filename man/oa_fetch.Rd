@@ -81,8 +81,8 @@ Defaults to 200.}
 
 \item{paging}{Character.
 Either "cursor" for cursor paging or "page" for basic paging.
-When used with `options$sample` and or `pages`,
-paging is also automatically set to basic paging: `paging = "page"`
+When used with \code{options$sample} and or \code{pages},
+paging is also automatically set to basic paging: \code{paging = "page"}
 to avoid duplicates and get the right page.
 See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
 

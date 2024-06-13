@@ -189,11 +189,11 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' @param pages_save_function Function.
 #' The function which will be used to save the individual pages if
 #' `output_pages_to` is set. This function has to take at least two arguments:
-#'   - the object to save (which will be the page returned in the same formnat 
+#'   - the object to save as the forst argument (which will be the page returned in the same formnat
 #'     as returned by the function `oa_request()`)
-#'   - the file name where to save it to (which is 
+#'   - the file name where to save it to named `file` (which is
 #'     `file.path(output_pages_to, paste0("page_", i, ".rds"))`).
-#' This function can be used for example to save the results in a database or 
+#' This function can be used for example to save the results in a database or
 #' a different format than `.rds`.
 #' Defaults to `saveRDS`.
 #' @param count_only Logical.
@@ -213,6 +213,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' For more extensive information about OpenAlex API, please visit:
 #' <https://docs.openalex.org>
 #'
+#' @md
 #'
 #' @examples
 #' \dontrun{
@@ -433,13 +434,10 @@ oa_request <- function(query_url,
     res <- api_request(query_url, ua, query = query_ls)
     next_page <- get_next_page(paging, i + 1, res)
     if (!is.null(output_pages_to)) {
-      fn <- file.path(output_pages_to, paste0("page_", i, ".rds"))
+      fn <- file.path(output_pages_to, paste0("set_", i, ".rds"))
       pages_save_function(
-        unlist(
-          res$results,
-          recursive = FALSE
-        ),
-        file.path(output_pages_to, paste0("page_", i, ".rds"))
+        res$results,
+        fn
       )
       result[[i]] <- fn
     } else {
@@ -448,37 +446,34 @@ oa_request <- function(query_url,
   }
 
   if (is.null(output_pages_to)) {
-    return(data <- unlist(data, recursive = FALSE))
+    if (grepl("filter", query_url) && grepl("works", query_url)) {
+      truncated <- unlist(truncated_authors(data))
+      if (length(truncated)) {
+        truncated <- shorten_oaid(truncated)
+        warning(
+          "\nThe following work(s) have truncated lists of authors: ",
+          paste(truncated, collapse = ", "),
+          ".\nQuery each work separately by its identifier to get full list of authors.\n",
+          "For example:\n  ",
+          paste0(
+            "lapply(c(\"",
+            paste(utils::head(truncated, 2), collapse = "\", \""),
+            "\"), \\(x) oa_fetch(identifier = x))"
+          ),
+          "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
+        )
+      }
+    }
+    return(data)
   } else {
     return(result)
   }
-
-  if (grepl("filter", query_url) && grepl("works", query_url)) {
-    truncated <- unlist(truncated_authors(data))
-    if (length(truncated)) {
-      truncated <- shorten_oaid(truncated)
-      warning(
-        "\nThe following work(s) have truncated lists of authors: ",
-        paste(truncated, collapse = ", "),
-        ".\nQuery each work separately by its identifier to get full list of authors.\n",
-        "For example:\n  ",
-        paste0(
-          "lapply(c(\"",
-          paste(utils::head(truncated, 2), collapse = "\", \""),
-          "\"), \\(x) oa_fetch(identifier = x))"
-        ),
-        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
-      )
-    }
-  }
-
-  data
 }
 
 truncated_authors <- function(list_result) {
   lapply(
     list_result,
-    function(x){
+    function(x) {
       trunc <- x$is_authors_truncated
       if (!is.null(trunc) && trunc) x$id else NULL
     }

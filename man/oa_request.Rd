@@ -28,8 +28,8 @@ Defaults to 200.}
 
 \item{paging}{Character.
 Either "cursor" for cursor paging or "page" for basic paging.
-When used with `options$sample` and or `pages`,
-paging is also automatically set to basic paging: `paging = "page"`
+When used with \code{options$sample} and or \code{pages},
+paging is also automatically set to basic paging: \code{paging = "page"}
 to avoid duplicates and get the right page.
 See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
 
@@ -39,22 +39,24 @@ The range of pages to return. If NULL, return all pages.}
 \item{output_pages_to}{Character.
 If NULL, the individual pages will be downloaded and processed in memory.
 If not NULL, the individual pages
-downloaded will be saved in the directory specified by `output_pages_to`.
+downloaded will be saved in the directory specified by \code{output_pages_to}.
 The directory will be created if it does not exist.
-**The function will overwrite existing files in the directory without
-warning!**
+\strong{The function will overwrite existing files in the directory without
+warning!}
 Defaults to NULL.}
 
 \item{pages_save_function}{Function.
 The function which will be used to save the individual pages if
-`output_pages_to` is set. This function has to take at least two arguments:
-  - the object to save (which will be the page returned in the same formnat 
-    as returned by the function `oa_request()`)
-  - the file name where to save it to (which is 
-    `file.path(output_pages_to, paste0("page_", i, ".rds"))`).
-This function can be used for example to save the results in a database or 
-a different format than `.rds`.
-Defaults to `saveRDS`.}
+\code{output_pages_to} is set. This function has to take at least two arguments:
+\itemize{
+\item the object to save as the forst argument (which will be the page returned in the same formnat
+as returned by the function \code{oa_request()})
+\item the file name where to save it to named \code{file} (which is
+\code{file.path(output_pages_to, paste0("page_", i, ".rds"))}).
+This function can be used for example to save the results in a database or
+a different format than \code{.rds}.
+Defaults to \code{saveRDS}.
+}}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
@@ -70,15 +72,15 @@ Your OpenAlex Premium API key, if available.}
 If TRUE, print information about the querying process. Defaults to TRUE.}
 }
 \value{
-a data.frame or a list of bibliographic records. If `output_pages_to` is
+a data.frame or a list of bibliographic records. If \code{output_pages_to} is
 not NULL a character vector containing the names of the saved pages
 is returned.
 
 For more extensive information about OpenAlex API, please visit:
-<https://docs.openalex.org>
+\url{https://docs.openalex.org}
 }
 \description{
-`oa_request` makes a request and downloads bibliographic records from
+\code{oa_request} makes a request and downloads bibliographic records from
 OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 The function \code{oa_request} queries OpenAlex database using a query
 formulated through the function \code{oa_query}.
