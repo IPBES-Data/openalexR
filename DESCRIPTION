@@ -25,8 +25,7 @@ Authors@R: c(
            email = "jchoe001@gmail.com",
            comment = c(ORCID = "0000-0002-0701-921X"))
     )
-Description: A set of tools to extract bibliographic content from
-    'OpenAlex' database using API <https://docs.openalex.org>.
+Description: A Fork of the package openalexR 'OpenAlex' database using API <https://docs.openalex.org>.
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/openalexR,
     https://docs.ropensci.org/openalexR/
